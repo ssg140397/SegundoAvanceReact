@@ -1,19 +1,29 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import ItemListContainer from './components/ItemListContainer/ItemListContainer'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ItemListContainer from "./components/pages/itemListContainer/ItemListContainer";
+import Cart from "./components/pages/cart/Cart";
+import ItemDetailContainer from "./components/pages/itemDetailContainer/ItemDetailContainer";
+import Layout from "./components/layout/Layout";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <Navbar/>
-      <ItemListContainer greeting = {'Bienvenidos'}/>
-      <ItemCount initial={1} stock ={10} onAdd= {(quantity)=> console.log('cantidad agregada', quantity)}/>
-    </>
-  )
+    <BrowserRouter>
+      {/* <ThemeProvider theme={customTheme}> */}
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<ItemListContainer />} />
+          <Route
+            path="/category/:categoryName"
+            element={<ItemListContainer />}
+          />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/itemDetail/:id" element={<ItemDetailContainer />} />
+
+          <Route path="*" element={<h1>Not found</h1>} />
+        </Route>
+      </Routes>
+      {/* </ThemeProvider> */}
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
