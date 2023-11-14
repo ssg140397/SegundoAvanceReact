@@ -26,6 +26,9 @@ const ProductCard = ({ item }) => {
         <Typography variant="body2" color="text.secondary">
           $ {item.stock} .-
         </Typography>
+        <Typography variant="body2" color="text.secondary">
+          $ {item.price} .-
+        </Typography>
       </CardContent>
       <CardActions>
         <Link to={`/itemDetail/${item.id}`}>

@@ -1,35 +1,61 @@
 import { useEffect, useState } from "react";
-import { products } from "../../../productosMock";
 import { ItemDetail } from "../itemDetailContainer/itemDetail.";
 import { useParams } from "react-router-dom";
+import { database } from "../../../firebaseConfig";
+import {getDoc, collection, doc } from "firebase/firestore"
+import Swal from "sweetalert2"
+
+
 
 const ItemDetailContainer = () => {
+
   const [productSelected, setProductSelected] = useState({});
+  const [showCounter, setShowCounter] = useState(true);
 
   const { id } = useParams();
 
+  const { addToCart, getQuantityById } = useContext(CartContext);
+
+  let totalQuantity = getQuantityById(id);
+
   useEffect(() => {
-    let producto = products.find((product) => product.id === +id);
+    let itemCollection = collection(database, "products");
 
-    const getProduct = new Promise((resolve, reject) => {
-      resolve(producto);
-      // reject("error");
+    let refDoc = doc(itemCollection, id);
+
+    getDoc(refDoc).then((res) => {
+      setProductSelected({ id: res.id, ...res.data() });
     });
-
-    getProduct
-      .then((res) => setProductSelected(res))
-      .catch((err) => console.log(err));
   }, [id]);
 
   const onAdd = (cantidad) => {
-    let obj = {
+    let item = {
       ...productSelected,
       quantity: cantidad,
     };
-    console.log("este es el producto que se agrega", obj);
+
+    addToCart(item);
+
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Agregado al carrito",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+
+    setShowCounter(false);
   };
 
-  return <ItemDetail productSelected={productSelected} onAdd={onAdd} />;
+  return (
+    <ItemDetail
+      showCounter={showCounter}
+      productSelected={productSelected}
+      onAdd={onAdd}
+      initial={totalQuantity}
+    />
+  );
 };
 
 export default ItemDetailContainer;
+

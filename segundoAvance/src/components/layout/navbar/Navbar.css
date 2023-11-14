@@ -3,7 +3,7 @@
     height: 10vh;
     display: flex;
     justify-content: space-between;
-    background-color: steelblue;
+    background-color: rgb(211, 84, 59);
     align-items: center;
     padding: 10px;
   }
